@@ -123,7 +123,7 @@ def seed_boutique_sample(product, metadata):
                 'source':{'id':bid,'filename':bill['filename'],'sha256':bill['sha256'],'page':1,'reviewed_at':None},'source_bill_id':bid}
             db.execute('INSERT INTO activities VALUES(?,?,?,?,?,?,?,?)',(aid,payload['company_id'],payload['facility_id'],payload['period_id'],bid,bill['sha256']+':page:1',json.dumps(payload),now))
 
-    client=TestClient(product.app,base_url='http://localhost:8004',client=('127.0.0.1',45001))
+    client=TestClient(product.app,base_url='https://localhost:8004',client=('127.0.0.1',45001))
     client.get('/boutique').raise_for_status()
     session=client.get('/auth/session').json();client.headers['X-CSRF-Token']=session['csrf']
     for slug,name,_,_ in clients:

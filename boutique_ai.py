@@ -117,7 +117,8 @@ class BoutiqueAssistant:
         return {'model': self.model, 'model_available': self._available(),
                 'retrieval_backend': 'scoped_record_search', 'embedding_backend': None,
                 'counts': {key: len(_items(context, key)) for key in ('companies', 'datasets', 'requests', 'evidence', 'reports')},
-                'privacy': 'Questions and authorised workspace facts are processed by the local Ollama model. No messages are sent by this assistant.',
+                'privacy': ('Public fictional demo: source retrieval only; no model service is called.' if user.get('public_demo') else
+                            'Questions and authorised workspace facts are processed by the local Ollama model. No messages are sent by this assistant.'),
                 'capabilities': ['source_search', 'missing_data', 'owners', 'reporting_progress', 'calculation_sources', 'reminder_proposals'],
                 'sending_enabled': False}
 
@@ -294,7 +295,7 @@ class BoutiqueAssistant:
         sources = self._rank(self._sources(context, body), body.question, intent)
         citations = [{key: source[key] for key in ('id', 'title', 'url')} for source in sources]
         actions = []
-        if intent == 'reminders' and role(user) == 'consultant_manager':
+        if intent == 'reminders' and role(user) == 'consultant_manager' and not user.get('public_demo'):
             request_ids = [source['record_id'] for source in sources if source['kind'] == 'request' and source['facts'].get('status') == 'open']
             if request_ids:
                 actions = [{'type': 'prepare_reminders', 'label': 'Review reminder drafts', 'request_ids': request_ids,

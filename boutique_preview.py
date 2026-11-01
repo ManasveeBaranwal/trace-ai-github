@@ -14,6 +14,10 @@ from security import SESSION_SECONDS
 
 def install_boutique_preview(app, accounts, root):
     active = os.getenv('TRACE_BOUTIQUE_PREVIEW', '0') == '1'
+    public_requested = os.getenv('TRACE_PUBLIC_DEMO', '0') == '1'
+    # Only the dedicated public launcher may activate remote sample sessions,
+    # after seeding and revalidating its temporary fictional store.
+    app.state.public_demo_active = False
     metadata = None
     if active:
         marker = accounts.path.parent / '.boutique-preview.json'
@@ -22,6 +26,9 @@ def install_boutique_preview(app, accounts, root):
         metadata = json.loads(marker.read_text())
         if metadata.get('kind') != 'trace-boutique-fictional-preview-v1':
             raise RuntimeError('This is not an isolated boutique preview store')
+        if public_requested:
+            from public_demo_server import validate_public_store
+            validate_public_store(accounts.path.parent, metadata)
         with accounts.db() as db:
             db.execute('''CREATE TABLE IF NOT EXISTS boutique_preview_sessions(
                 token_hash TEXT PRIMARY KEY, csrf TEXT NOT NULL, expires_at REAL NOT NULL)''')
@@ -35,7 +42,9 @@ def install_boutique_preview(app, accounts, root):
         return {'id': metadata['profile_id'], 'name': 'Aarav · Sample firm manager',
                 'email': '', 'role': 'consultant_manager', 'firm_id': firm['id'],
                 'company_id': None, 'active': True, 'created_at': metadata['created_at'],
-                'local_only': True}
+                'local_only': not app.state.public_demo_active,
+                'public_demo': bool(app.state.public_demo_active),
+                'read_only': bool(app.state.public_demo_active)}
 
     def resolve(token):
         if not active or not token:
@@ -61,7 +70,7 @@ def install_boutique_preview(app, accounts, root):
             if role(request.state.user) not in {'consultant_manager', 'consultant'}:
                 return RedirectResponse(home(request.state.user), 303)
             return FileResponse(Path(root)/'static/boutique.html', headers={'Cache-Control': 'no-store'})
-        can_enter = (active and request.state.local_enabled
+        can_enter = (active and (request.state.local_enabled or app.state.public_demo_active)
                      and request.headers.get('sec-fetch-site') != 'cross-site'
                      and request.headers.get('sec-fetch-dest', 'document') == 'document'
                      and not request.cookies.get('trace_session')
@@ -77,5 +86,6 @@ def install_boutique_preview(app, accounts, root):
                        (hashlib.sha256(token.encode()).hexdigest(), csrf, time.time()+SESSION_SECONDS))
         response = RedirectResponse('/boutique', 303)
         response.set_cookie('trace_boutique_session', token, max_age=SESSION_SECONDS,
-                            httponly=True, samesite='strict', secure=request.url.scheme=='https', path='/')
+                            httponly=True, samesite='strict',
+                            secure=request.url.scheme=='https' or os.getenv('TRACE_COOKIE_SECURE')=='1', path='/')
         return response

@@ -69,7 +69,8 @@ class CoefficientKnowledge:
                 'model': self.model, 'model_available': self._availability(),
                 'counts': {'published_versions': len(allowed), 'sources': len(source_ids)},
                 'seed_warning': self.service.seed_warning,
-                'privacy': 'Local retrieval and local model generation; documents and questions are not sent to a cloud model.'}
+                'privacy': ('Public fictional demo: source retrieval only; no model service is called.' if user.get('public_demo') else
+                            'Local retrieval and local model generation; documents and questions are not sent to a cloud model.')}
 
     @staticmethod
     def _filters(body):

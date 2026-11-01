@@ -1,18 +1,16 @@
-# Paid resources: review Render pricing before deploying this blueprint.
+# Free fictional demo only. No disk, database, hosted model, or paid instance.
 services:
   - type: web
     name: trace-ai
     runtime: docker
-    plan: starter
+    plan: free
     healthCheckPath: /health
     numInstances: 1
-    disk:
-      name: trace-data
-      mountPath: /var/data
-      sizeGB: 1
     envVars:
       - key: TRACE_DATA
-        value: /var/data
+        value: /tmp/trace-ai-public-demo
+      - key: TRACE_PUBLIC_DEMO
+        value: "1"
       - key: TRACE_REQUIRE_LOGIN
         value: "1"
       - key: TRACE_TWO_ACCESS

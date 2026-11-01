@@ -88,9 +88,12 @@ def install_access(app, accounts, get_bill, save_bill, bill_connection, root, de
     @app.middleware('http')
     async def access_control(request, call_next):
         path = request.url.path
+        public_demo = bool(getattr(app.state, 'public_demo_active', False))
         local_enabled = os.getenv('TRACE_REQUIRE_LOGIN','1') == '0' and request.client and request.client.host in {'127.0.0.1','::1'}
         account_cookie = request.cookies.get('trace_session')
-        session = accounts.session(account_cookie)
+        # Public demo identity comes only from the isolated fictional store.
+        # A normal account cookie never becomes a demo or founder credential.
+        session = None if public_demo else accounts.session(account_cookie)
         company_cookie = request.cookies.get('trace_company_manager')
         boutique_cookie = request.cookies.get('trace_boutique_session')
         local_boutique_mode = False
@@ -100,14 +103,14 @@ def install_access(app, accounts, get_bill, save_bill, bill_connection, root, de
             session = resolver(company_cookie)
             local_company_mode = bool(session)
         boutique_resolver = getattr(app.state, 'resolve_boutique_session', None)
-        if local_enabled and not account_cookie and not company_cookie and not session and boutique_cookie and boutique_resolver:
+        if (local_enabled or public_demo) and not account_cookie and not company_cookie and not session and boutique_cookie and boutique_resolver:
             session = boutique_resolver(boutique_cookie)
             local_boutique_mode = bool(session)
         # A real account always keeps its role, even on the founder's local Mac.
         # Passwordless founder access starts only at the separate private entry URL.
         local_cookie = request.cookies.get('trace_local_master','')
         return_hint = request.cookies.get('trace_local_return','')
-        local_credentials_allowed = bool(local_enabled and not account_cookie and not company_cookie and not boutique_cookie and not session
+        local_credentials_allowed = bool(local_enabled and not public_demo and not account_cookie and not company_cookie and not boutique_cookie and not session
                                          and not getattr(app.state, 'boutique_preview_active', False))
         founder_session = founder.resolve(local_cookie) if local_credentials_allowed else None
         enter_local = bool(local_credentials_allowed
@@ -126,6 +129,7 @@ def install_access(app, accounts, get_bill, save_bill, bill_connection, root, de
         request.state.local_company_mode = local_company_mode
         request.state.local_boutique_mode = local_boutique_mode
         request.state.local_enabled = bool(local_enabled)
+        request.state.public_demo_mode = public_demo
         request.state.user = session['user'] if session else None
         request.state.session = session
         request.state.local_entry_available = bool(local_credentials_allowed and
@@ -136,6 +140,15 @@ def install_access(app, accounts, get_bill, save_bill, bill_connection, root, de
             expected = str(request.base_url).rstrip('/')
             if request.headers.get('sec-fetch-site') == 'cross-site' or (origin and origin != expected):
                 return JSONResponse({'detail':'Cross-origin request rejected'},403)
+        if public_demo:
+            # These POSTs only retrieve scoped source records or end a session.
+            # Everything that could save data, extract documents, create a
+            # collection capability, review a report or grant access is denied.
+            read_only_posts = {'/api/boutique/ai/ask', '/api/knowledge/ask', '/auth/logout'}
+            if path.startswith('/collect/') or (changing and not (request.method == 'POST' and path in read_only_posts)):
+                return JSONResponse({'detail':'This public demo is read-only. Use the local workspace to change data.',
+                                     'public_demo_mode':True,'read_only':True},403,
+                                    headers={'Cache-Control':'no-store'})
         protected = path.startswith('/api/') or path in {'/extract','/docs','/redoc','/openapi.json','/docs/oauth2-redirect'}
         if protected:
             if not session:
@@ -189,6 +202,8 @@ def install_access(app, accounts, get_bill, save_bill, bill_connection, root, de
     def login_page(request:Request):
         if request.state.user:
             return RedirectResponse(home(request.state.user),303)
+        if request.state.public_demo_mode:
+            return FileResponse(root/'static/public-demo-entry.html',headers={'Cache-Control':'no-store'})
         if request.state.local_enabled and request.query_params.get('account') != '1':
             if (getattr(app.state, 'boutique_preview_active', False)
                     and not request.cookies.get('trace_session') and not request.cookies.get('trace_company_manager')):
@@ -215,6 +230,8 @@ def install_access(app, accounts, get_bill, save_bill, bill_connection, root, de
                 'access_stage':'two' if os.getenv('TRACE_TWO_ACCESS','0') == '1' else 'hierarchy',
                 'local_company_mode':request.state.local_company_mode,
                 'local_boutique_mode':request.state.local_boutique_mode,
+                'public_demo_mode':request.state.public_demo_mode,
+                'read_only':request.state.public_demo_mode,
                 'local_entry_available':request.state.local_entry_available,
                 'local_entry_url':'/super-admin' if request.state.local_entry_available else None,
                 'recovery_available':bool(not request.state.session and request.state.local_enabled and any(request.cookies.get(k) for k in ('trace_session','trace_local_master','trace_company_manager','trace_boutique_session')))}

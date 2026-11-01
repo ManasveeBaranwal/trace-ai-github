@@ -4,6 +4,16 @@ A FastAPI workspace for boutique sustainability firms: client companies and repo
 
 This is a self-contained deployment copy of the working local product. No existing account databases, uploaded evidence, backups, credentials, or private research files are included.
 
+## Free public demo
+
+`render.yaml` selects **Free** compute, with no paid disk, database or hosted AI. Keep the Render workspace on Hobby and leave payment details unset. Render suspends free services or stops new builds at the applicable limits when no payment method is on file; see [the current free-plan rules](https://render.com/docs/free).
+
+The public demo contains fictional records only. Visitors can explore clients, reporting years, source evidence and reports, and ask source-retrieval questions. Editing, uploads, approvals, account creation, collection links and reminders are disabled. No founder shortcut or real company data is exposed. Inference is disabled in this mode, including when `OLLAMA_HOST` is configured.
+
+Free services sleep after 15 minutes of inactivity, can take about a minute to wake, and lose local files on restart or redeploy. This demo reseeds its fictional data when necessary. It is suitable for reviewers; keep editable real records in the local application. Free quotas can also suspend availability. The demo is not an always-on production service.
+
+The container uses `cloud_server.py` to select `public_demo_server.load_public_demo()` only when `TRACE_PUBLIC_DEMO=1`. Ordinary startup retains account authentication. The public-demo data directory must be dedicated to the demo; it refuses existing non-demo records.
+
 ## Local boutique sample
 
 Use Python 3.13 or newer. From this repository folder:
@@ -30,7 +40,7 @@ python manage.py
 
 Open http://127.0.0.1:8002/login. The founder creates a consulting firm and its manager through the platform account tools. An authenticated firm manager lands in the boutique workspace. Reviewer accounts must be provisioned before sharing a hosted login URL.
 
-## Docker and Render hosting
+## Authenticated Docker hosting
 
 The Dockerfile starts the frontend and backend on `0.0.0.0:$PORT` with one worker and login required.
 
@@ -48,7 +58,7 @@ docker exec -it trace-ai python manage.py
 
 Open http://localhost:8000/login. Keep passwords out of source and command arguments. `.env.example` documents configuration but is not automatically loaded. For HTTPS hosts set `TRACE_COOKIE_SECURE=1`, configure explicit comma-separated `TRACE_ALLOWED_HOSTS`, and configure `FORWARDED_ALLOW_IPS` for your trusted reverse proxy so origin/CSRF checks see the correct HTTPS scheme.
 
-`render.yaml` describes one Docker web service with a 1 GB persistent disk at `/var/data`. **It selects paid hosting; it does not create a live deployment by itself.** Review the plan before deploying. The Render blueprint trusts forwarded headers through Render's managed HTTPS proxy; do not reuse its wildcard `FORWARDED_ALLOW_IPS` on a container directly exposed without that proxy boundary. Render's `RENDER_EXTERNAL_HOSTNAME` is automatically added to trusted hosts; add custom domains explicitly through `TRACE_ALLOWED_HOSTS`. Run `python manage.py` once in the deployed service's interactive shell to create the founder. The container must have write access to its mounted disk. Retain `TRACE_REQUIRE_LOGIN=1`, `TRACE_TWO_ACCESS=0`, and one instance.
+The checked-in Render blueprint is for the free fictional demo above. Authenticated production hosting needs separate durable storage and explicit approval of any provider costs. Render's `RENDER_EXTERNAL_HOSTNAME` is automatically added to trusted hosts; add custom domains explicitly through `TRACE_ALLOWED_HOSTS`. The blueprint trusts forwarded headers through Render's managed HTTPS proxy; do not reuse its wildcard `FORWARDED_ALLOW_IPS` on a directly exposed container. Provision the first founder with `python manage.py` against the same database before sharing an authenticated installation. Retain `TRACE_REQUIRE_LOGIN=1`, `TRACE_TWO_ACCESS=0`, and one instance.
 
 GitHub Pages cannot run the Python backend. A private source repository can support a publicly reachable website protected by account login. No anonymous hosted founder or manager shortcut is enabled.
 
