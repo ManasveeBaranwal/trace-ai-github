@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Boutique workspace · Trace AI</title>
+  <link rel="stylesheet" href="/static/boutique.css?v=20261102-boutique-v4">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to workspace</a>
+<aside class="sidebar" aria-label="Boutique workspace navigation">
+  <a class="brand" href="/boutique"><span aria-hidden="true">↗</span> trace<span class="brand-ai">AI</span></a>
+  <div class="firm-identity"><span class="eyebrow">CONSULTING WORKSPACE</span><strong id="firm-name">Your boutique firm</strong><span id="firm-role">Consultant Manager</span></div>
+  <nav id="firm-nav" aria-label="Firm navigation">
+    <a href="#dashboard" data-view="dashboard"><span aria-hidden="true">◈</span> Firm dashboard</a>
+    <a href="#clients" data-view="clients"><span aria-hidden="true">▦</span> Client companies</a>
+    <a href="#team" data-view="team"><span aria-hidden="true">♙</span> Team & access</a>
+    <a href="#standards" data-view="standards"><span aria-hidden="true">◎</span> Standards & coefficients</a>
+    <a href="#tasks" data-view="tasks"><span aria-hidden="true">☷</span> Review & tasks <span id="task-count" class="nav-count" hidden></span></a>
+  </nav>
+  <div class="client-nav-heading"><span class="eyebrow">CLIENT WORKSPACE</span><strong id="nav-client-name">Select a client above</strong></div>
+  <nav id="client-nav" aria-label="Selected client navigation">
+    <a href="#setup" data-view="setup"><span aria-hidden="true">◇</span> Company setup</a>
+    <a href="#data" data-view="data"><span aria-hidden="true">▤</span> Data & evidence</a>
+    <a href="#review" data-view="review"><span aria-hidden="true">✓</span> Review & calculations</a>
+    <a href="#reports" data-view="reports"><span aria-hidden="true">≡</span> BRSR reports</a>
+  </nav>
+  <a class="ai-launcher" href="#ai" data-view="ai"><span class="ai-spark" aria-hidden="true">✧</span><span><strong>Ask Trace AI</strong><small>Your data, with context</small></span><span class="ai-arrow" aria-hidden="true">↗</span></a>
+  <div class="sidebar-foot"><span></span> Evidence before totals</div>
+</aside>
+<main id="main">
+  <header class="topbar"><div class="breadcrumb"><span id="breadcrumb-firm">Trace AI</span><span>/</span><strong id="breadcrumb-page">Firm dashboard</strong></div><div id="account-banner"></div></header>
+  <div class="sandbox-note"><span class="sandbox-dot"></span><strong>Local boutique workspace</strong><span>Fictional sample data · changes stay in this separate workspace</span></div>
+  <section class="context-bar" aria-label="Reporting context">
+    <label><span>CLIENT COMPANY</span><select id="client-context" aria-label="Client company"><option value="">All firm clients</option></select></label>
+    <label><span>REPORTING YEAR</span><select id="year-context" aria-label="Reporting year"><option value="">Choose a reporting year</option></select></label>
+    <div class="context-status"><span class="context-dot"></span><span id="context-caption">One portfolio. Connected evidence.</span></div>
+  </section>
+  <div class="page-heading"><div><p class="eyebrow" id="page-eyebrow">YOUR FIRM, IN VIEW</p><h1 id="page-title">Progress, with proof.</h1><p class="page-description" id="page-description">A clear view of your clients, the evidence behind their figures and the work that needs you.</p></div><div id="page-actions" class="actions"><button id="refresh" class="button secondary" type="button">Refresh ↻</button></div></div>
+  <p id="page-error" class="message error" role="alert" hidden></p><p id="page-feedback" class="message success" role="status" hidden></p>
+  <div id="loading" class="loading" role="status"><span></span> Preparing your workspace…</div>
+  <div id="view-content" aria-live="polite"></div>
+  <footer class="workspace-footer"><span>TRACE AI <span class="muted">by SustivioLabs</span></span><span>Source → review → report</span></footer>
+</main>
+<dialog id="form-dialog" aria-labelledby="form-title"><div class="dialog-heading"><div><p class="eyebrow" id="form-eyebrow">KEEP THE CONTEXT CONNECTED</p><h2 id="form-title">Add record</h2></div><button class="icon-button" id="form-close" aria-label="Close form" type="button">×</button></div><p id="form-intro" class="muted"></p><form id="record-form"><div id="form-fields" class="form-fields"></div><p id="form-error" class="message error" role="alert" hidden></p><div class="dialog-footer"><button class="button secondary" id="form-cancel" type="button">Cancel</button><button class="button primary" id="form-submit" type="submit">Save record</button></div></form></dialog>
+<dialog id="detail-dialog" class="detail-dialog" aria-labelledby="detail-title"><div class="dialog-heading"><div><p class="eyebrow" id="detail-eyebrow">FOLLOW THE SOURCE</p><h2 id="detail-title">Record details</h2></div><button class="icon-button" id="detail-close" aria-label="Close details" type="button">×</button></div><div id="detail-content"></div><div id="detail-actions" class="dialog-footer"></div></dialog>
+<script src="/static/session.js?v=20261102-boutique-v4"></script><script src="/static/boutique.js?v=20261102-boutique-v4"></script>
+</body></html>

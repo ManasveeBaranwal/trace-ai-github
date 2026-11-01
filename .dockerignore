@@ -1,0 +1,14 @@
+.git
+.github
+data
+backups
+.env
+.env.*
+.venv
+venv
+__pycache__
+**/__pycache__
+*.sqlite*
+*.db
+*.log
+research/sources

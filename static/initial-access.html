@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Trace AI · Workspace</title>
+  <link rel="stylesheet" href="/static/initial-access.css?v=20261101">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <aside class="sidebar" aria-label="Workspace navigation">
+    <a class="brand" id="brand-home" href="#overview"><span class="brand-arrow" aria-hidden="true">↗</span> trace<span class="brand-ai">AI</span></a>
+    <div class="workspace-identity"><span class="overline">SustivioLabs</span><strong id="access-label">Your workspace</strong><span id="scope-label">Loading your access…</span></div>
+    <nav id="workspace-nav" aria-label="Main navigation"></nav>
+    <div class="sidebar-footer"><span class="status-dot"></span><div>Evidence before totals<small id="scope-note">Preparing your workspace</small></div></div>
+  </aside>
+
+  <main id="main" class="workspace-main">
+    <header class="topbar"><div class="breadcrumb">Trace AI <span>/</span> <strong id="breadcrumb-role">Workspace</strong></div><div id="account-banner"></div></header>
+    <div class="page-heading"><div><p class="overline" id="page-eyebrow">Reporting, with a clear source</p><h1 id="page-title">Opening your workspace…</h1><p id="page-description" class="muted">Checking the records available to your access.</p></div><button class="button secondary" id="refresh" type="button" disabled>Refresh <span aria-hidden="true">↻</span></button></div>
+    <p id="page-error" class="message error" role="alert" hidden></p>
+    <p id="page-feedback" class="message success" role="status" hidden></p>
+    <div id="loading-state" class="loading-state" role="status"><span class="loading-dot"></span> Loading your company records…</div>
+
+    <div id="workspace-content" hidden>
+      <section id="view-overview" class="view" aria-label="Overview">
+        <div class="hero"><div class="hero-copy"><span class="hero-label" id="hero-label">TRACE AI</span><h2 id="hero-title"></h2><p id="hero-description"></p><div class="actions" id="hero-actions"></div></div><div class="hero-diagram" aria-hidden="true"><div class="diagram-line"></div><span class="diagram-step">01 <b>Source</b></span><span class="diagram-step">02 <b>Review</b></span><span class="diagram-step">03 <b>Report</b></span><div class="diagram-caption">Every figure has a story.</div></div></div>
+        <div class="metric-grid" id="metrics"></div>
+        <div class="overview-grid"><section class="card"><div class="section-heading"><div><p class="overline">Next steps</p><h2 id="next-title">Move your work forward</h2></div></div><div id="next-steps"></div></section><section class="card"><div class="section-heading"><div><p class="overline">Your access</p><h2 id="responsibility-title"></h2></div><span class="small-badge" id="responsibility-badge"></span></div><p class="muted" id="responsibility-description"></p><div id="responsibility-list" class="responsibility-list"></div></section></div>
+        <section class="card overview-records"><div class="section-heading"><div><p class="overline">Current work</p><h2 id="recent-title">Company workspaces</h2></div><a id="recent-all" class="text-link" href="#companies">View all →</a></div><div id="recent-work"></div></section>
+      </section>
+
+      <section id="view-companies" class="view" hidden aria-label="Companies"><div class="toolbar"><label class="search-field"><span class="sr-only">Search companies</span><input id="company-search" type="search" placeholder="Search company, industry or country…"></label><button class="button primary" type="button" id="add-company">＋ Add company</button></div><div id="companies-grid" class="portfolio-grid"></div></section>
+
+      <section id="view-access" class="view" hidden aria-label="Company Manager access"><div class="info-note"><strong>Two access types, with separate responsibilities.</strong><p>Super Access manages the platform. A Company Manager works within one company. Opening a company workspace switches this browser into its Company Manager session.</p></div><div id="access-grid" class="portfolio-grid"></div></section>
+
+      <section id="view-company" class="view" hidden aria-label="Company details"><div class="card"><p class="overline">Your organisation</p><div id="company-profile"></div><div class="actions" id="company-profile-actions"></div></div><div class="source-grid" id="company-tools"></div></section>
+
+      <section id="view-evidence" class="view" hidden aria-label="Evidence and records"><div class="toolbar"><p class="muted">Source documents and activity records available to your company.</p><div id="evidence-actions" class="actions"></div></div><div class="card"><div class="section-heading"><h2>Electricity bills</h2></div><div id="documents-table" class="table-wrap"></div></div><div class="card stack-card"><div class="section-heading"><h2>Activity records</h2></div><div id="activities-table" class="table-wrap"></div></div></section>
+
+      <section id="view-reports" class="view" hidden aria-label="BRSR reports"><div class="info-note"><strong>Prepare one reporting workspace for each company, year and boundary.</strong><p>Collect answers, attach evidence, review supported calculations and create a report snapshot in the BRSR workspace.</p></div><div id="reports-actions" class="actions section-actions"></div><div class="card"><div id="reports-table" class="table-wrap"></div></div></section>
+    </div>
+  </main>
+
+  <dialog id="company-dialog" aria-labelledby="company-dialog-title"><div class="dialog-heading"><h2 id="company-dialog-title">Add company</h2><button class="icon-button" type="button" data-close="company-dialog" aria-label="Close company form">×</button></div><form id="company-form"><input type="hidden" id="company-id"><label>Company name<input id="company-name" required minlength="2" maxlength="160" autocomplete="organization"></label><div class="form-grid"><label>Industry<input id="company-industry" maxlength="120" placeholder="e.g. Manufacturing"></label><label>Country / region<input id="company-country" maxlength="100" placeholder="e.g. India"></label></div><label class="checkbox"><input id="company-active" type="checkbox" checked> Company is active</label><p class="muted form-note">Inactive companies retain their records. Their Company Manager access is suspended.</p><p class="form-error error" role="alert" hidden></p><button class="button primary full" type="submit">Save company</button></form></dialog>
+
+  <dialog id="manager-dialog" aria-labelledby="manager-dialog-title"><div class="dialog-heading"><h2 id="manager-dialog-title">Company Manager</h2><button class="icon-button" type="button" data-close="manager-dialog" aria-label="Close manager form">×</button></div><form id="manager-form"><input type="hidden" id="manager-company-id"><p class="muted" id="manager-company-name"></p><label>Manager display name<input id="manager-name" required minlength="1" maxlength="120" autocomplete="off"></label><p class="muted form-note">This names the local Company Manager access. Email and password entry are not required in this local phase.</p><p class="form-error error" role="alert" hidden></p><button class="button primary full" type="submit">Save manager name</button></form></dialog>
+  <script src="/static/session.js?v=20261101-login-recovery-v1"></script>
+  <script src="/static/initial-access.js?v=20261101-coefficient-rag-v1"></script>
+</body>
+</html>

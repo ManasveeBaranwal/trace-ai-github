@@ -1,0 +1,14 @@
+data/
+backups/
+.env
+.env.*
+!.env.example
+__pycache__/
+*.py[cod]
+*.sqlite*
+*.db
+.venv/
+venv/
+.DS_Store
+research/sources/
+*.log

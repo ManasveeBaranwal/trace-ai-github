@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Trace AI · Open your workspace</title>
+  <link rel="stylesheet" href="/static/admin.css">
+  <style>
+    body{min-height:100vh;display:grid;place-items:center;padding:28px;background:#eef2e9}
+    .entry{width:100%;max-width:560px;box-sizing:border-box;background:#fff;border:1px solid #d9e3d3;padding:44px;border-radius:18px}
+    .entry .brand{display:inline-block;color:#234d37;margin-bottom:30px}.entry h1{font-size:38px;line-height:1.15;margin:14px 0 20px}.entry p{line-height:1.7;color:#6c7d67}
+    .entry .entry-primary{display:block;width:100%;box-sizing:border-box;border:0;background:#234d37;color:white;border-radius:7px;padding:14px 18px;text-align:center;font-weight:600;text-decoration:none;cursor:pointer;font-size:15px}
+    .entry .entry-primary:focus-visible,.entry input:focus-visible{outline:3px solid #afc77e;outline-offset:3px}.entry label{display:block;font-size:14px;font-weight:600;color:#244536;margin:22px 0 9px}.entry input{box-sizing:border-box;width:100%;padding:13px;border:1px solid #cdd8c7;border-radius:7px;font:inherit;margin-bottom:12px}.entry .subtle{font-size:13px}.entry details{margin-top:24px}.entry summary{cursor:pointer;color:#315b40;font-size:14px}.entry .notice{padding:14px 16px;border-radius:8px;background:#f1f5e9;margin:20px 0}.entry .notice p{margin:0 0 12px}.entry .error{color:#a03832;font-size:14px}.entry [hidden]{display:none!important}.entry .entry-divider{border-top:1px solid #e4eadf;margin-top:26px;padding-top:17px}
+    @media(max-width:540px){body{padding:16px}.entry{padding:28px 24px}.entry h1{font-size:32px}}
+  </style>
+</head>
+<body>
+  <main class="entry">
+    <a class="brand" href="/">↗ trace<span>AI</span></a>
+    <p class="eyebrow">YOUR WORKSPACE</p>
+    <h1 id="entry-title">Open your workspace.</h1>
+    <p id="entry-description">Continue with your workspace link. Your dashboard shows the tools and records available to your access.</p>
+    <p id="entry-status" class="subtle" role="status">Checking your previous workspace…</p>
+    <a id="resume-workspace" class="entry-primary" hidden>Open my workspace →</a>
+    <section id="session-recovery" class="notice" hidden aria-label="Previous session">
+      <p>Your previous session has ended. Clear it to open a workspace link again. For company access, ask the person who manages your workspace to reopen it.</p>
+      <button id="clear-session" class="secondary" type="button">Clear previous session</button>
+    </section>
+    <details id="workspace-details" open>
+      <summary id="workspace-summary">Use a workspace link</summary>
+      <form id="workspace-form">
+        <label for="workspace-link">Workspace link</label>
+        <input id="workspace-link" type="text" inputmode="url" placeholder="Paste the workspace link you were given" maxlength="2048" autocomplete="off" autocapitalize="off" spellcheck="false" required aria-describedby="workspace-help">
+        <button class="entry-primary" type="submit">Open workspace →</button>
+        <p id="workspace-help" class="subtle">Use a link for this Trace AI app. If you do not have one, ask the person who manages your access.</p>
+      </form>
+    </details>
+    <p id="recovery-error" class="error" role="alert" hidden></p>
+    <button id="retry-session" class="secondary" type="button" hidden>Check connection again</button>
+    <p class="subtle entry-divider">Local access · No email or password is required in this development workspace.</p>
+  </main>
+  <script src="/static/entry.js?v=20261101-login-recovery-v2"></script>
+</body>
+</html>

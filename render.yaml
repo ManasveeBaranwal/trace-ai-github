@@ -1,0 +1,28 @@
+# Paid resources: review Render pricing before deploying this blueprint.
+services:
+  - type: web
+    name: trace-ai
+    runtime: docker
+    plan: starter
+    healthCheckPath: /health
+    numInstances: 1
+    disk:
+      name: trace-data
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: TRACE_DATA
+        value: /var/data
+      - key: TRACE_REQUIRE_LOGIN
+        value: "1"
+      - key: TRACE_TWO_ACCESS
+        value: "0"
+      - key: TRACE_COOKIE_SECURE
+        value: "1"
+      - key: TRACE_ALLOWED_HOSTS
+        value: localhost,127.0.0.1
+      # Render terminates HTTPS and forwards traffic through its managed proxy.
+      - key: FORWARDED_ALLOW_IPS
+        value: "*"
+      - key: SUSTIVIO_MODEL
+        value: qwen3-vl:4b
